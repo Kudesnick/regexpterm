@@ -2,12 +2,13 @@
 #define CONSOLE_H
 
 #include <QtGui>
+#include <QPlainTextEdit>
 
 class Console : public QPlainTextEdit
 {
     Q_OBJECT
 public:
-    explicit Console(QWidget *parent = 0);
+    explicit Console(QWidget *parent = nullptr);
     void output(QString);
     void scrollDown();
 protected:

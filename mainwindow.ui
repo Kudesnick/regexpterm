@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTextEdit" name="txOut">
+   <widget class="Console" name="txOut">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -66,6 +66,13 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Console</class>
+   <extends>QPlainTextEdit</extends>
+   <header>console.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
