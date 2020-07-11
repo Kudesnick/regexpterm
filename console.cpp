@@ -4,7 +4,7 @@
 Console::Console(QWidget *parent) :
 	QPlainTextEdit(parent)
 {
-    prompt = "rtt> ";
+    prompt = "rtt$ ";
 
     QPalette p = palette();
     p.setColor(QPalette::Base, Qt::black);
@@ -115,7 +115,7 @@ void Console::historyBack()
     cursor.movePosition(QTextCursor::StartOfBlock);
     cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
     cursor.removeSelectedText();
-    cursor.insertText(prompt + history->at(historyPos-1));
+    cursor.insertText(prompt + history->at(historyPos - 1));
     setTextCursor(cursor);
     historyPos--;
 }
