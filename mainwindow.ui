@@ -6,63 +6,85 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>622</width>
+    <height>404</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="layoutDirection">
+   <enum>Qt::LeftToRight</enum>
+  </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="Console" name="txOut">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>40</y>
-      <width>351</width>
-      <height>211</height>
-     </rect>
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="leftMargin">
+     <number>4</number>
     </property>
-    <property name="font">
-     <font>
-      <family>Courier New</family>
-      <pointsize>10</pointsize>
-     </font>
+    <property name="topMargin">
+     <number>4</number>
     </property>
-   </widget>
-   <widget class="QPushButton" name="btnConnect">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>10</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
+    <property name="rightMargin">
+     <number>4</number>
     </property>
-    <property name="text">
-     <string>Connect</string>
+    <property name="bottomMargin">
+     <number>4</number>
     </property>
-   </widget>
-   <widget class="QLineEdit" name="txIn">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>260</y>
-      <width>351</width>
-      <height>20</height>
-     </rect>
+    <property name="spacing">
+     <number>4</number>
     </property>
-   </widget>
+    <item row="1" column="0">
+     <layout class="QGridLayout" name="gridLayout_1">
+      <property name="spacing">
+       <number>4</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="Console" name="txOut">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777214</width>
+          <height>16777214</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Courier New</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>622</width>
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuConnect">
+    <property name="title">
+     <string>Connect</string>
+    </property>
+   </widget>
+   <addaction name="menuConnect"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
@@ -74,22 +96,5 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>btnConnect</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>btnConnect</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>77</x>
-     <y>43</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>77</x>
-     <y>43</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

@@ -4,7 +4,7 @@
 Console::Console(QWidget *parent) :
 	QPlainTextEdit(parent)
 {
-    prompt = "redis> ";
+    prompt = "rtt> ";
 
     QPalette p = palette();
     p.setColor(QPalette::Base, Qt::black);
