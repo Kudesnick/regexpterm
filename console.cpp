@@ -62,23 +62,36 @@ void Console::onEnter()
 
 void Console::output(QString s)
 {
-    textCursor().insertBlock();
+    QString cmd = "";
+    if (isLocked == false)
+    {
+        cmd = textCursor().block().text().mid(prompt.length());
+        QTextCursor cursor = textCursor();
+        cursor.movePosition(QTextCursor::End);
+        cursor.select(QTextCursor::LineUnderCursor);
+        cursor.removeSelectedText();
+        setTextCursor(cursor);
+    }
+    else
+    {
+        textCursor().insertBlock();
+    }
     QTextCharFormat format;
     format.setForeground(Qt::white);
     textCursor().setBlockCharFormat(format);
     textCursor().insertText(s);
-    insertPrompt();
+    insertPrompt(true, cmd);
     isLocked = false;
 }
 
-void Console::insertPrompt(bool insertNewBlock)
+void Console::insertPrompt(bool insertNewBlock, QString cmd)
 {
     if(insertNewBlock)
 	textCursor().insertBlock();
     QTextCharFormat format;
     format.setForeground(Qt::green);
     textCursor().setBlockCharFormat(format);
-    textCursor().insertText(prompt);
+    textCursor().insertText(prompt + cmd);
     scrollDown();
 }
 

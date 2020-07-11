@@ -23,7 +23,7 @@ private:
     int historyPos;
 
     void onEnter();
-    void insertPrompt(bool insertNewBlock = true);
+    void insertPrompt(bool insertNewBlock = true, QString cmd = "");
     void historyAdd(QString);
     void historyBack();
     void historyForward();
