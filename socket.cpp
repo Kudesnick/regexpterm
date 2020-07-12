@@ -36,7 +36,7 @@ void Socket::slotRead()
     while (canReadLine())
     {
         QString strRead = readLine();
-
+        strRead = strRead.trimmed();
         emit output(strRead);
     }
 }
@@ -54,4 +54,3 @@ void Socket::slotError(QAbstractSocket::SocketError _Error)
                     );
     emit state(strError);
 }
-

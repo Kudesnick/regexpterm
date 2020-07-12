@@ -21,6 +21,7 @@ private:
     bool isLocked;
     QStringList *history;
     int historyPos;
+    QTextCharFormat colorOutDef, colorCmd, colorOutCurr;
 
     void onEnter();
     void insertPrompt(bool insertNewBlock = true, QString cmd = "");

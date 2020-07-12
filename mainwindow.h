@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "socket.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,7 +16,10 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void FakeSignal(QString);
+
 private:
     Ui::MainWindow *ui;
+    Socket *rtt_telnet;
 };
 #endif // MAINWINDOW_H
