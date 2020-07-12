@@ -24,5 +24,6 @@ public:
 private:
     Ui::MainWindow *ui;
     Socket *rtt_telnet;
+    void readPatterns(QStringList &tabs);
 };
 #endif // MAINWINDOW_H

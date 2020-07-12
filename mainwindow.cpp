@@ -48,6 +48,25 @@ void MainWindow::newTab(bool check)
     delete dlg;
 }
 
+void MainWindow::readPatterns(QStringList &tabs)
+{
+    QFile file("patterns.txt");
+
+    if ((file.exists())&&(file.open(QIODevice::ReadOnly)))
+    {
+        while(!file.atEnd())
+        {
+            tabs.append(QString(file.readLine()).trimmed());
+        }
+        file.close();
+    }
+
+    if (!tabs.count())
+    {
+        tabs.append(".*");
+    }
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -62,11 +81,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->tabWidget, &QTabWidget::tabCloseRequested  , this, &MainWindow::slotTabClosRequested);
 
-    QStringList tabs =
-    {
-        ".*",
-        "^Run.*",
-    };
+    QStringList tabs;
+    readPatterns(tabs);
 
     rtt_telnet = new Socket("localhost", 19021);
     for(auto i : tabs) tabCreate(i, i);
