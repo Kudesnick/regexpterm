@@ -2,6 +2,7 @@
 #define SOCKET_H
 
 #include <QtNetwork/QTcpSocket>
+#include <QTimer>
 
 class Socket : public QTcpSocket
 {
@@ -12,12 +13,14 @@ public:
 protected:
     QString Host;
     int Port;
+    QTimer *tmr;
 
 private:
     void slotConnected();
     void slotDisconnected();
     void slotError(QAbstractSocket::SocketError _Error);
     void slotRead();
+    void slotConnect();
 
 signals:
     void output(QString);
