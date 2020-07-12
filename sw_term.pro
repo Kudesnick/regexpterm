@@ -19,15 +19,18 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     console.cpp \
+    newtabdialog.cpp \
     socket.cpp
 
 HEADERS += \
     mainwindow.h \
     console.h \
+    newtabdialog.h \
     socket.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    newtabdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

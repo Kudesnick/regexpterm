@@ -18,6 +18,8 @@ public:
 
     void FakeSignal(QString);
     void slotTabClosRequested(int index);
+    void tabCreate(QString regExpPattern, QString name);
+    void newTab(bool check);
 
 private:
     Ui::MainWindow *ui;
