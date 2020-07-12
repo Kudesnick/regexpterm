@@ -17,6 +17,7 @@ public:
     ~MainWindow();
 
     void FakeSignal(QString);
+    void slotTabClosRequested(int index);
 
 private:
     Ui::MainWindow *ui;

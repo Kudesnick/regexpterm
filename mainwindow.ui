@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>622</width>
-    <height>404</height>
+    <width>620</width>
+    <height>403</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,40 +33,24 @@
     <property name="spacing">
      <number>4</number>
     </property>
-    <item row="1" column="0">
-     <layout class="QGridLayout" name="gridLayout_1">
-      <property name="spacing">
-       <number>4</number>
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="usesScrollButtons">
+       <bool>true</bool>
       </property>
-      <item row="0" column="0">
-       <widget class="Console" name="txOut">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777214</width>
-          <height>16777214</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <family>Courier New</family>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-       </widget>
-      </item>
-     </layout>
+      <property name="documentMode">
+       <bool>false</bool>
+      </property>
+      <property name="tabsClosable">
+       <bool>true</bool>
+      </property>
+      <property name="movable">
+       <bool>true</bool>
+      </property>
+      <property name="tabBarAutoHide">
+       <bool>false</bool>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -75,8 +59,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>622</width>
-     <height>22</height>
+     <width>620</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuConnect">
@@ -88,13 +72,6 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>Console</class>
-   <extends>QPlainTextEdit</extends>
-   <header>console.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>
