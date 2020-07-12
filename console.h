@@ -8,9 +8,10 @@ class Console : public QPlainTextEdit
 {
     Q_OBJECT
 public:
-    explicit Console(QWidget *parent = nullptr);
+    explicit Console(QWidget *parent = nullptr, QString pattern = ".*");
     void output(QString);
     void scrollDown();
+    void setRegExp(QString);
 protected:
     void keyPressEvent(QKeyEvent *);
     void mousePressEvent(QMouseEvent *);
@@ -22,6 +23,7 @@ private:
     QStringList *history;
     int historyPos;
     QTextCharFormat colorOutDef, colorCmd, colorOutCurr;
+    QRegExp allowRegExp;
 
     void onEnter();
     void insertPrompt(bool insertNewBlock = true, QString cmd = "");

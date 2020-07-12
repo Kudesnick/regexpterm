@@ -1,8 +1,9 @@
 #include "console.h"
 #include <QtWidgets/QScrollBar>
 
-Console::Console(QWidget *parent) :
-	QPlainTextEdit(parent)
+Console::Console(QWidget *parent, QString pattern)
+    : QPlainTextEdit(parent)
+    , allowRegExp(pattern)
 {
     prompt = "rtt$ ";
 
@@ -67,6 +68,10 @@ void Console::onEnter()
 
 void Console::output(QString s)
 {
+    // RegExp match
+    if (!s.contains(allowRegExp))
+        return;
+
     QString cmd = "";
     if (isLocked == false)
     {
@@ -81,7 +86,6 @@ void Console::output(QString s)
     {
         textCursor().insertBlock();
     }
-//    textCursor().setBlockCharFormat(colorOutCurr);
     // Colorized console
     for (int startPos = s.indexOf("\033["); startPos >= 0; startPos = s.indexOf("\033["))
     {
