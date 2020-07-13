@@ -27,8 +27,6 @@ void MainWindow::tabCreate(QString regExpPattern, QString name)
     Console *con = new Console(nullptr, regExpPattern);
     ui->tabWidget->addTab(con, name);
 
-    con->output("Hello word!");
-
     connect(con       , &Console::onCommand, rtt_telnet, &Socket::send          );
     connect(rtt_telnet, &Socket::state     , this      , &MainWindow::FakeSignal);
     connect(rtt_telnet, &Socket::output    , con       , &Console::output       );
