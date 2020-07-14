@@ -95,7 +95,7 @@ void Console::output(QString s)
         int mPos = s.indexOf("m");
         if (mPos < 1)
             break;
-        QStringList lst = s.mid(2, mPos - 2).split(QLatin1Char(','));
+        QStringList lst = s.mid(2, mPos - 2).split(QLatin1Char(';'));
         for (auto i : lst)
         {
             bool res = false;

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>RegExp Terminal v0.1</string>
   </property>
   <property name="layoutDirection">
    <enum>Qt::LeftToRight</enum>
@@ -53,22 +53,6 @@
      </widget>
     </item>
    </layout>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>620</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuConnect">
-    <property name="title">
-     <string>Connect</string>
-    </property>
-   </widget>
-   <addaction name="menuConnect"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
