@@ -12,6 +12,7 @@ public:
     void output(QString);
     void scrollDown();
     void setRegExp(QString);
+    static QStringList history;
 protected:
     void keyPressEvent(QKeyEvent *);
     void mousePressEvent(QMouseEvent *);
@@ -20,7 +21,6 @@ protected:
 private:
     QString prompt;
     bool isLocked;
-    QStringList *history;
     int historyPos;
     QTextCharFormat colorOutDef, colorCmd, colorOutCurr;
     QRegExp allowRegExp;

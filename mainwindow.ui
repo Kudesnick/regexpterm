@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>RegExp Terminal v0.1</string>
+   <string>RegExp Terminal v0.2a</string>
   </property>
   <property name="layoutDirection">
    <enum>Qt::LeftToRight</enum>

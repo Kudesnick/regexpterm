@@ -6,7 +6,7 @@
 #include <QLabel>
 #include <QPushButton>
 
-void MainWindow::FakeSignal(QString msg)
+void MainWindow::state(QString msg)
 {
     ui->statusBar->showMessage(msg);
 //    ui->txOut->output(msg);
@@ -27,16 +27,18 @@ void MainWindow::tabCreate(QString regExpPattern, QString name)
     Console *con = new Console(nullptr, regExpPattern);
     ui->tabWidget->addTab(con, name);
 
-    connect(con       , &Console::onCommand, rtt_telnet, &Socket::send          );
-    connect(rtt_telnet, &Socket::state     , this      , &MainWindow::FakeSignal);
-    connect(rtt_telnet, &Socket::output    , con       , &Console::output       );
+    connect(con       , &Console::onCommand, rtt_telnet, &Socket::send     );
+    connect(rtt_telnet, &Socket::state     , this      , &MainWindow::state);
+    connect(rtt_telnet, &Socket::output    , con       , &Console::output  );
 }
 
 void MainWindow::newTab(bool check)
 {
     (void)check;
 
-    newTabDialog *dlg = new newTabDialog;
+    QStringList patterns;
+    readStringListFromFile("patterns.txt", patterns);
+    newTabDialog *dlg = new newTabDialog(nullptr, &patterns);
 
     if (dlg->exec() == QDialog::Accepted)
     {
@@ -46,23 +48,20 @@ void MainWindow::newTab(bool check)
     delete dlg;
 }
 
-void MainWindow::readPatterns(QStringList &tabs)
+bool MainWindow::readStringListFromFile(QString filename, QStringList &strList)
 {
-    QFile file("patterns.txt");
+    QFile file(filename);
 
     if ((file.exists())&&(file.open(QIODevice::ReadOnly)))
     {
         while(!file.atEnd())
         {
-            tabs.append(QString(file.readLine()).trimmed());
+            strList.append(QString(file.readLine()).trimmed());
         }
         file.close();
     }
 
-    if (!tabs.count())
-    {
-        tabs.append(".*");
-    }
+    return (strList.count() != 0);
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -79,11 +78,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->tabWidget, &QTabWidget::tabCloseRequested  , this, &MainWindow::slotTabClosRequested);
 
-    QStringList tabs;
-    readPatterns(tabs);
-
     rtt_telnet = new Socket("localhost", 19021);
+
+    QStringList tabs;
+    if (!readStringListFromFile("tabs.txt", tabs))
+        tabs.append(".*");
     for(auto i : tabs) tabCreate(i, i);
+
+    readStringListFromFile("commands.txt", Console::history);
 
     // User code end
 }
@@ -92,4 +94,3 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-

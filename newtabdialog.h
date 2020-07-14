@@ -12,7 +12,7 @@ class newTabDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit newTabDialog(QWidget *parent = nullptr);
+    explicit newTabDialog(QWidget *parent = nullptr, QStringList *itemList = nullptr);
     ~newTabDialog();
 
     QString regEx() const;

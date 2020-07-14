@@ -1,6 +1,8 @@
 #include "console.h"
 #include <QtWidgets/QScrollBar>
 
+QStringList Console::history;
+
 Console::Console(QWidget *parent, QString pattern)
     : QPlainTextEdit(parent)
     , allowRegExp(pattern)
@@ -17,7 +19,6 @@ Console::Console(QWidget *parent, QString pattern)
     colorCmd.setForeground(Qt::green);
     colorCmd.setBackground(Qt::black);
 
-    history = new QStringList;
     historyPos = 0;
     insertPrompt(false);
     isLocked = false;
@@ -199,8 +200,8 @@ void Console::scrollDown()
 
 void Console::historyAdd(QString cmd)
 {
-    history->append(cmd);
-    historyPos = history->length();
+    history.append(cmd);
+    historyPos = history.length();
 }
 
 void Console::historyBack()
@@ -211,23 +212,23 @@ void Console::historyBack()
     cursor.movePosition(QTextCursor::StartOfBlock);
     cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
     cursor.removeSelectedText();
-    cursor.insertText(prompt + history->at(historyPos - 1));
+    cursor.insertText(prompt + history.at(historyPos - 1), colorCmd);
     setTextCursor(cursor);
     historyPos--;
 }
 
 void Console::historyForward()
 {
-    if(historyPos == history->length())
+    if(historyPos == history.length())
 	return;
     QTextCursor cursor = textCursor();
     cursor.movePosition(QTextCursor::StartOfBlock);
     cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
     cursor.removeSelectedText();
-    if(historyPos == history->length() - 1)
-	cursor.insertText(prompt);
+    if(historyPos == history.length() - 1)
+    cursor.insertText(prompt, colorCmd);
     else
-	cursor.insertText(prompt + history->at(historyPos + 1));
+    cursor.insertText(prompt + history.at(historyPos + 1), colorCmd);
     setTextCursor(cursor);
     historyPos++;
 }
