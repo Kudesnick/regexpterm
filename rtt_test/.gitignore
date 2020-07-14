@@ -1,0 +1,11 @@
+output/
+doxy/
+keil*/DebugConfig
+*.uvguix.*
+*.uvgui.*
+*.uvoptx
+*.uvopt
+*.scvd
+keil*/JLink*
+*.vscode
+*__pycache__*
