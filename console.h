@@ -20,7 +20,6 @@ protected:
     void contextMenuEvent(QContextMenuEvent *);
 private:
     QString prompt;
-    bool isLocked;
     int historyPos;
     QTextCharFormat colorOutDef, colorCmd, colorOutCurr;
     QRegExp allowRegExp;
@@ -28,8 +27,7 @@ private:
     void onEnter();
     void insertPrompt(bool insertNewBlock = true, QString cmd = "");
     void historyAdd(QString);
-    void historyBack();
-    void historyForward();
+    void historyGet(int);
 signals:
     void onCommand(QString);
     void onChange(QString);
