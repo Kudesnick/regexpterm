@@ -28,6 +28,8 @@ private:
     void insertPrompt(bool insertNewBlock = true, QString cmd = "");
     void historyAdd(QString);
     void historyGet(int);
+
+    void onClr();
 signals:
     void onCommand(QString);
     void onChange(QString);

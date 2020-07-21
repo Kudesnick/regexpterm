@@ -1,5 +1,6 @@
 #include "console.h"
 #include <QtWidgets/QScrollBar>
+#include <QMenu>
 
 QStringList Console::history;
 
@@ -25,21 +26,24 @@ Console::Console(QWidget *parent, QString pattern)
 
 void Console::keyPressEvent(QKeyEvent *event)
 {
-    if(event->key() >= 0x20 && event->key() <= 0x7e
-       && (event->modifiers() == Qt::NoModifier || event->modifiers() == Qt::ShiftModifier))
-	QPlainTextEdit::keyPressEvent(event);
-    if(true
-       && event->key() == Qt::Key_Backspace
-       && event->modifiers() == Qt::NoModifier
-       && textCursor().positionInBlock() > prompt.length()
-      )
+    if (true
+        && event->key() >= 0x20
+        && event->key() <= 0x7e
+        && (event->modifiers() == Qt::NoModifier || event->modifiers() == Qt::ShiftModifier)
+       )
+        QPlainTextEdit::keyPressEvent(event);
+    if (true
+        && event->key() == Qt::Key_Backspace
+        && event->modifiers() == Qt::NoModifier
+        && textCursor().positionInBlock() > prompt.length()
+       )
         QPlainTextEdit::keyPressEvent(event);
     if(event->key() == Qt::Key_Return && event->modifiers() == Qt::NoModifier)
-	onEnter();
+        onEnter();
     if(event->key() == Qt::Key_Up && event->modifiers() == Qt::NoModifier)
-    historyGet(-1);
+        historyGet(-1);
     if(event->key() == Qt::Key_Down && event->modifiers() == Qt::NoModifier)
-    historyGet(1);
+        historyGet(1);
     QString cmd = textCursor().block().text().mid(prompt.length());
     emit onChange(cmd);
 }
@@ -51,7 +55,24 @@ void Console::mousePressEvent(QMouseEvent *)
 
 void Console::mouseDoubleClickEvent(QMouseEvent *){}
 
-void Console::contextMenuEvent(QContextMenuEvent *){}
+void Console::onClr()
+{
+    clear();
+    insertPrompt(false);
+}
+
+void Console::contextMenuEvent(QContextMenuEvent *event)
+{
+    QMenu *contMenu = new QMenu(this);
+    QAction *A  = new QAction(contMenu);
+
+    A->setText(tr("Clear"));
+    contMenu->addAction(A);
+    connect(A, &QAction::triggered, this, &Console::onClr);
+
+    contMenu->exec(event->globalPos());
+    delete contMenu;
+}
 
 void Console::onEnter()
 {
