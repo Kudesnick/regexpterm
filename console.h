@@ -19,6 +19,8 @@ protected:
     void mouseDoubleClickEvent(QMouseEvent *);
     void contextMenuEvent(QContextMenuEvent *);
 private:
+    const int historyMax = 10;
+
     QString prompt;
     int historyPos;
     QTextCharFormat colorOutDef, colorCmdOk, colorCmdErr, colorOutCurr, colorCmdCurr;

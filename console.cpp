@@ -230,6 +230,9 @@ void Console::historyAdd(QString cmd)
         history.removeAt(history.indexOf(cmd));
     }
     history.append(cmd);
+
+    while (history.length() > historyMax)
+        history.removeFirst();
     historyPos = history.length();
 }
 

@@ -25,5 +25,10 @@ private:
     Ui::MainWindow *ui;
     Socket *rtt_telnet;
     bool readStringListFromFile(QString filename, QStringList &strList);
+    void writeStringListFromFile(QString filename, QStringList &strList);
+
+    const QString fTabs = "tabs.txt";
+    const QString fPatterns = "patterns.txt";
+    const QString fCommands = "commands.txt";
 };
 #endif // MAINWINDOW_H
