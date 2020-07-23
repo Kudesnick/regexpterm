@@ -28,8 +28,8 @@ void MainWindow::tabCreate(QString regExpPattern, QString name)
     ui->tabWidget->addTab(con, name);
 
     connect(con       , &Console::onCommand, rtt_telnet, &Socket::send     );
-    connect(rtt_telnet, &Socket::state     , this      , &MainWindow::state);
     connect(rtt_telnet, &Socket::output    , con       , &Console::output  );
+    connect(rtt_telnet, &Socket::state, con, &Console::setConnectState);
 }
 
 void MainWindow::newTab(bool check)
@@ -76,9 +76,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabWidget->setCornerWidget(corner, Qt::TopRightCorner);
     connect(corner, &QPushButton::clicked, this, &MainWindow::newTab);
 
-    connect(ui->tabWidget, &QTabWidget::tabCloseRequested  , this, &MainWindow::slotTabClosRequested);
+    connect(ui->tabWidget, &QTabWidget::tabCloseRequested, this, &MainWindow::slotTabClosRequested);
 
     rtt_telnet = new Socket("localhost", 19021);
+    connect(rtt_telnet, &Socket::stateMsg, this, &MainWindow::state);
 
     QStringList tabs;
     if (!readStringListFromFile("tabs.txt", tabs))

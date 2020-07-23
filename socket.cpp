@@ -16,7 +16,8 @@ Socket::Socket(QString _Host, int _Port,  QObject *_prnt)
 
 void Socket::slotConnect()
 {
-    emit state("Connecting..");
+    emit state(false);
+    emit stateMsg("Connecting..");
     QTcpSocket::connectToHost(Host, Port);
 }
 
@@ -28,14 +29,16 @@ void Socket::send(QString _Str)
 
 void Socket::slotConnected()
 {
-    emit state("The connection success.");
+    emit state(true);
+    emit stateMsg("The connection success.");
 }
 
 void Socket::slotDisconnected()
 {
-    emit state("Disconnect socket.");
+    emit state(false);
+    emit stateMsg("Disconnect socket.");
 
-    QTimer::singleShot(3000, this, &Socket::slotConnect);
+    QTimer::singleShot(6000, this, &Socket::slotConnect);
 }
 
 void Socket::slotRead()
@@ -52,6 +55,7 @@ void Socket::slotRead()
 
 void Socket::slotError(QAbstractSocket::SocketError _Error)
 {
+    emit state(false);
     QString strError = 
         "Error: " + (_Error == QAbstractSocket::HostNotFoundError ?
                      "The host was not found." :
@@ -61,7 +65,7 @@ void Socket::slotError(QAbstractSocket::SocketError _Error)
                      "The connection was refused." :
                      QString(errorString())
                     );
-    emit state(strError);
+    emit stateMsg(strError);
 
-    QTimer::singleShot(3000, this, &Socket::slotConnect);
+    QTimer::singleShot(6000, this, &Socket::slotConnect);
 }

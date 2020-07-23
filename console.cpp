@@ -17,11 +17,20 @@ Console::Console(QWidget *parent, QString pattern)
     colorOutDef.setForeground(Qt::white);
     colorOutDef.setBackground(Qt::black);
     colorOutCurr = colorOutDef;
-    colorCmd.setForeground(Qt::green);
-    colorCmd.setBackground(Qt::black);
+    colorCmdOk.setForeground(Qt::green);
+    colorCmdOk.setBackground(Qt::black);
+    colorCmdErr.setForeground(Qt::red);
+    colorCmdErr.setBackground(Qt::black);
+    colorCmdCurr = colorCmdErr;
 
     historyPos = -1;
     insertPrompt(false);
+}
+
+void Console::setConnectState(bool isOk)
+{
+    colorCmdCurr = (isOk) ? colorCmdOk : colorCmdErr;
+    insertPrompt(false, removePromt());
 }
 
 void Console::keyPressEvent(QKeyEvent *event)
@@ -88,13 +97,7 @@ void Console::output(QString s)
     if (!s.contains(allowRegExp))
         return;
 
-    QString cmd = "";
-    cmd = textCursor().block().text().mid(prompt.length());
-    QTextCursor cursor = textCursor();
-    cursor.movePosition(QTextCursor::End);
-    cursor.select(QTextCursor::LineUnderCursor);
-    cursor.removeSelectedText();
-    setTextCursor(cursor);
+    QString cmd = removePromt();
 
     // Colorized console
     for (int startPos = s.indexOf("\033["); startPos >= 0; startPos = s.indexOf("\033["))
@@ -189,14 +192,28 @@ void Console::output(QString s)
         s = s.mid(mPos + 1);
     }
     textCursor().insertText(s, colorOutCurr);
+
     insertPrompt(true, cmd);
+}
+
+QString Console::removePromt(void)
+{
+    QString cmd = "";
+    cmd = textCursor().block().text().mid(prompt.length());
+    QTextCursor cursor = textCursor();
+    cursor.movePosition(QTextCursor::End);
+    cursor.select(QTextCursor::LineUnderCursor);
+    cursor.removeSelectedText();
+    setTextCursor(cursor);
+
+    return cmd;
 }
 
 void Console::insertPrompt(bool insertNewBlock, QString cmd)
 {
     if(insertNewBlock)
         textCursor().insertBlock();
-    textCursor().insertText(prompt + cmd, colorCmd);
+    textCursor().insertText(prompt + cmd, colorCmdCurr);
     scrollDown();
 }
 
@@ -239,6 +256,6 @@ void Console::historyGet(int _inc)
     cursor.movePosition(QTextCursor::StartOfBlock);
     cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
     cursor.removeSelectedText();
-    cursor.insertText(prompt + history.at(historyPos), colorCmd);
+    cursor.insertText(prompt + history.at(historyPos), colorCmdCurr);
     setTextCursor(cursor);
 }

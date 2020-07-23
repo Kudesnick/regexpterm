@@ -11,7 +11,7 @@ public:
     explicit Console(QWidget *parent = nullptr, QString pattern = ".*");
     void output(QString);
     void scrollDown();
-    void setRegExp(QString);
+    void setConnectState(bool isOk);
     static QStringList history;
 protected:
     void keyPressEvent(QKeyEvent *);
@@ -21,10 +21,11 @@ protected:
 private:
     QString prompt;
     int historyPos;
-    QTextCharFormat colorOutDef, colorCmd, colorOutCurr;
+    QTextCharFormat colorOutDef, colorCmdOk, colorCmdErr, colorOutCurr, colorCmdCurr;
     QRegExp allowRegExp;
 
     void onEnter();
+    QString removePromt(void);
     void insertPrompt(bool insertNewBlock = true, QString cmd = "");
     void historyAdd(QString);
     void historyGet(int);
