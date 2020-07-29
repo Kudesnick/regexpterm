@@ -3,6 +3,7 @@
 #include <QMenu>
 
 QStringList Console::history;
+bool Console::connectIsOk = false;
 
 Console::Console(QWidget *parent, QString pattern)
     : QPlainTextEdit(parent)
@@ -21,14 +22,15 @@ Console::Console(QWidget *parent, QString pattern)
     colorCmdOk.setBackground(Qt::black);
     colorCmdErr.setForeground(Qt::red);
     colorCmdErr.setBackground(Qt::black);
-    colorCmdCurr = colorCmdErr;
+
+    setConnectState(connectIsOk);
 
     historyPos = -1;
-    insertPrompt(false);
 }
 
 void Console::setConnectState(bool isOk)
 {
+    connectIsOk = isOk;
     colorCmdCurr = (isOk) ? colorCmdOk : colorCmdErr;
     insertPrompt(false, removePromt());
 }

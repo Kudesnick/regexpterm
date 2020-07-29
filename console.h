@@ -20,6 +20,7 @@ protected:
     void contextMenuEvent(QContextMenuEvent *);
 private:
     const int historyMax = 10;
+    static bool connectIsOk;
 
     QString prompt;
     int historyPos;
