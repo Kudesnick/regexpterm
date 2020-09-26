@@ -1,6 +1,7 @@
 #include "console.h"
 #include <QtWidgets/QScrollBar>
 #include <QMenu>
+#include <QClipboard>
 
 QStringList Console::history;
 bool Console::connectIsOk = false;
@@ -10,6 +11,10 @@ Console::Console(QWidget *parent, QString pattern)
     , allowRegExp(pattern)
 {
     prompt = "rtt$ ";
+
+    QFont f("monospace");
+    f.setStyleHint(QFont::Monospace);
+    setFont(f);
 
     QPalette p = palette();
     p.setColor(QPalette::Base, Qt::black);
@@ -72,16 +77,29 @@ void Console::onClr()
     insertPrompt(false);
 }
 
+void Console::onCopy()
+{
+    QGuiApplication::clipboard()->setText(toPlainText());
+}
+
 void Console::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu *contMenu = new QMenu(this);
-    QAction *A  = new QAction(contMenu);
 
+    QAction *A  = new QAction(contMenu);
     A->setText(tr("Clear"));
     contMenu->addAction(A);
     connect(A, &QAction::triggered, this, &Console::onClr);
 
+    QAction *B  = new QAction(contMenu);
+    B->setText(tr("Copy"));
+    contMenu->addAction(B);
+    connect(B, &QAction::triggered, this, &Console::onCopy);
+
     contMenu->exec(event->globalPos());
+
+    delete A;
+    delete B;
     delete contMenu;
 }
 

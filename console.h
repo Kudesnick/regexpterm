@@ -34,6 +34,7 @@ private:
     void historyGet(int);
 
     void onClr();
+    void onCopy();
 signals:
     void onCommand(QString);
     void onChange(QString);
