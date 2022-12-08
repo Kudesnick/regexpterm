@@ -2,7 +2,7 @@
 #include "ui_newtabdialog.h"
 
 newTabDialog::newTabDialog(QWidget *parent, QStringList *itemList) :
-    QDialog(parent),
+    QDialog(parent, Qt::WindowTitleHint | Qt::WindowCloseButtonHint),
     ui(new Ui::newTabDialog)
 {
     ui->setupUi(this);
