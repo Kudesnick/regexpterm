@@ -1,11 +1,14 @@
 #include "newtabdialog.h"
 #include "ui_newtabdialog.h"
 
-newTabDialog::newTabDialog(QWidget *parent) :
-    QDialog(parent),
+newTabDialog::newTabDialog(QWidget *parent, QStringList *itemList) :
+    QDialog(parent, Qt::WindowTitleHint | Qt::WindowCloseButtonHint),
     ui(new Ui::newTabDialog)
 {
     ui->setupUi(this);
+
+    if (itemList != nullptr)
+        ui->comboBox->addItems(*itemList);
 }
 
 newTabDialog::~newTabDialog()
@@ -15,5 +18,5 @@ newTabDialog::~newTabDialog()
 
 QString newTabDialog::regEx() const
 {
-    return ui->lineEdit->text();
+    return ui->comboBox->currentText();
 }

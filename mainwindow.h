@@ -16,7 +16,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void FakeSignal(QString);
+    void state(QString);
     void slotTabClosRequested(int index);
     void tabCreate(QString regExpPattern, QString name);
     void newTab(bool check);
@@ -24,6 +24,11 @@ public:
 private:
     Ui::MainWindow *ui;
     Socket *rtt_telnet;
-    void readPatterns(QStringList &tabs);
+    bool readStringListFromFile(QString filename, QStringList &strList);
+    void writeStringListFromFile(QString filename, QStringList &strList);
+
+    const QString fTabs = "tabs.txt";
+    const QString fPatterns = "patterns.txt";
+    const QString fCommands = "commands.txt";
 };
 #endif // MAINWINDOW_H

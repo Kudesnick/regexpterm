@@ -11,25 +11,30 @@ public:
     explicit Console(QWidget *parent = nullptr, QString pattern = ".*");
     void output(QString);
     void scrollDown();
-    void setRegExp(QString);
+    void setConnectState(bool isOk);
+    static QStringList history;
 protected:
     void keyPressEvent(QKeyEvent *);
     void mousePressEvent(QMouseEvent *);
     void mouseDoubleClickEvent(QMouseEvent *);
     void contextMenuEvent(QContextMenuEvent *);
 private:
+    const int historyMax = 10;
+    static bool connectIsOk;
+
     QString prompt;
-    bool isLocked;
-    QStringList *history;
     int historyPos;
-    QTextCharFormat colorOutDef, colorCmd, colorOutCurr;
+    QTextCharFormat colorOutDef, colorCmdOk, colorCmdErr, colorOutCurr, colorCmdCurr;
     QRegExp allowRegExp;
 
     void onEnter();
+    QString removePromt(void);
     void insertPrompt(bool insertNewBlock = true, QString cmd = "");
     void historyAdd(QString);
-    void historyBack();
-    void historyForward();
+    void historyGet(int);
+
+    void onClr();
+    void onCopy();
 signals:
     void onCommand(QString);
     void onChange(QString);

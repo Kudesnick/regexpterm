@@ -24,7 +24,8 @@ private:
 
 signals:
     void output(QString);
-    void state(QString);
+    void stateMsg(QString);
+    void state(bool);
 };
 
 #endif // SOCKET_H

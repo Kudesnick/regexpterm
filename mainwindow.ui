@@ -11,27 +11,33 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>RegExp Terminal v0.1</string>
+   <string>RegExp Terminal v0.3a</string>
   </property>
   <property name="layoutDirection">
    <enum>Qt::LeftToRight</enum>
   </property>
+  <property name="iconSize">
+   <size>
+    <width>16</width>
+    <height>16</height>
+   </size>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <property name="leftMargin">
-     <number>4</number>
+     <number>0</number>
     </property>
     <property name="topMargin">
-     <number>4</number>
+     <number>0</number>
     </property>
     <property name="rightMargin">
-     <number>4</number>
+     <number>0</number>
     </property>
     <property name="bottomMargin">
-     <number>4</number>
+     <number>0</number>
     </property>
     <property name="spacing">
-     <number>4</number>
+     <number>0</number>
     </property>
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">

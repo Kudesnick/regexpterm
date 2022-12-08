@@ -1,5 +1,7 @@
 QT       += core gui network
 
+win32:RC_ICONS += RegExTerm.ico
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
