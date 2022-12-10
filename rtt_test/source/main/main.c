@@ -53,15 +53,6 @@
  *                                    PUBLIC FUNCTIONS
  **************************************************************************************************/
 
-#if !defined(__CC_ARM) && defined(__ARMCC_VERSION) && !defined(__OPTIMIZE__)
-    /*
-    Without this directive, it does not start if -o0 optimization is used and the "main"
-    function without parameters.
-    see http://www.keil.com/support/man/docs/armclang_mig/armclang_mig_udb1499267612612.htm
-    */
-    __asm(".global __ARM_use_no_argv\n\t" "__ARM_use_no_argv:\n\t");
-#endif
-
 /**
  * @brief   Main function
  * @return  Error code
