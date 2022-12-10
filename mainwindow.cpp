@@ -36,51 +36,21 @@ void MainWindow::newTab(bool check)
 {
     (void)check;
 
-    QStringList patterns;
-    readStringListFromFile(fPatterns, patterns);
-    newTabDialog *dlg = new newTabDialog(nullptr, &patterns);
+    QStringList patternsList;
+    Patterns.read(patternsList);
+    newTabDialog *dlg = new newTabDialog(nullptr, &patternsList);
 
     if (dlg->exec() == QDialog::Accepted)
     {
         tabCreate(dlg->regEx(), dlg->regEx());
 
-        patterns.removeAll(dlg->regEx());
-        patterns.append(dlg->regEx());
+        patternsList.removeAll(dlg->regEx());
+        patternsList.append(dlg->regEx());
 
-        writeStringListFromFile(fPatterns, patterns);
+        Patterns.write(patternsList);
     }
 
     delete dlg;
-}
-
-bool MainWindow::readStringListFromFile(QString filename, QStringList &strList)
-{
-    QFile file(filename);
-
-    if ((file.exists())&&(file.open(QIODevice::ReadOnly)))
-    {
-        while(!file.atEnd())
-        {
-            strList.append(QString(file.readLine()).trimmed());
-        }
-        file.close();
-    }
-
-    return (strList.count() != 0);
-}
-
-void MainWindow::writeStringListFromFile(QString filename, QStringList &strList)
-{
-    QFile file(filename);
-
-    if (file.open(QIODevice::WriteOnly | QFile::Text))
-    {
-        for (auto i : strList)
-        {
-            file.write(i.toUtf8() + '\n');
-        }
-        file.close();
-    }
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -100,23 +70,23 @@ MainWindow::MainWindow(QWidget *parent)
     rtt_telnet = new Socket("localhost", 19021);
     connect(rtt_telnet, &Socket::stateMsg, this, &MainWindow::state);
 
-    QStringList tabs;
-    if (!readStringListFromFile(fTabs, tabs))
-        tabs.append(".*");
-    for(auto i : tabs) tabCreate(i, i);
+    QStringList tabsList;
+    if (!Tabs.read(tabsList))
+        tabsList.append(".*");
+    for(auto &i : tabsList) tabCreate(i, i);
 
-    readStringListFromFile(fCommands, Console::history);
+    Commands.read(Console::history);
 
     // User code end
 }
 
 MainWindow::~MainWindow()
 {
-    QStringList tabs;
+    QStringList tabsList;
     for (auto i = 0; i < ui->tabWidget->count(); i++)
-        tabs.append(ui->tabWidget->tabText(i));
-    writeStringListFromFile(fTabs, tabs);
-    writeStringListFromFile(fCommands, Console::history);
+        tabsList.append(ui->tabWidget->tabText(i));
+    Tabs.write(tabsList);
+    Commands.write(Console::history);
 
     delete ui;
 }
