@@ -24,7 +24,8 @@ void Socket::slotConnect()
 void Socket::send(QString _Str)
 {
     QTextStream os(this);
-    os << _Str << "\n";
+    os << _Str;
+    emit transmit(_Str);
 }
 
 void Socket::slotConnected()
@@ -43,13 +44,11 @@ void Socket::slotDisconnected()
 
 void Socket::slotRead()
 {
-    static QString strRead = "";
-
     while (canReadLine())
     {
         QString strRead = readLine();
         strRead = strRead.trimmed();
-        emit output(strRead);
+        emit receive(strRead);
     }
 }
 

@@ -18,9 +18,12 @@ public:
     ~MainWindow();
 
     void state(QString);
-    void slotTabClosRequested(int index);
+    void slotTabCloseRequested(int index);
     void tabCreate(QString regExpPattern, QString name);
     void newTab(bool check);
+
+private slots:
+    void on_btSend_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -29,5 +32,7 @@ private:
     FileOfStringList Tabs = {"tabs.txt"};
     FileOfStringList Patterns = {"patterns.txt"};
     FileOfStringList Commands = {"commands.txt"};
+signals:
+    void onCommand(QString);
 };
 #endif // MAINWINDOW_H

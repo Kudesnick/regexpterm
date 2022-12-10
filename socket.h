@@ -23,7 +23,8 @@ private:
     void slotConnect();
 
 signals:
-    void output(QString);
+    void receive(QString);
+    void transmit(QString);
     void stateMsg(QString);
     void state(bool);
 };
