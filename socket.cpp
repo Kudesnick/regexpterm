@@ -44,12 +44,20 @@ void Socket::slotDisconnected()
 
 void Socket::slotRead()
 {
+    /// @todo Данный режим обеспечивает полноценое эхо и диалоги, но затрудняет работу с регулярными выражениями
+#if (1)
+    QString str = readAll();
+    if (str.length())
+    {
+        emit receive(str);
+    }
+#else
     while (canReadLine())
     {
-        QString strRead = readLine();
-        strRead = strRead.trimmed();
-        emit receive(strRead);
+        QString str = readLine();
+        emit receive(str);
     }
+#endif
 }
 
 void Socket::slotError(QAbstractSocket::SocketError _Error)
@@ -66,5 +74,6 @@ void Socket::slotError(QAbstractSocket::SocketError _Error)
                     );
     emit stateMsg(strError);
 
+    /// @todo add setting autoconnect
     QTimer::singleShot(6000, this, &Socket::slotConnect);
 }

@@ -19,9 +19,10 @@ private:
     const int historyMax = 10;
     static bool connectIsOk;
 
-    QTextCharFormat colorOutDef, colorCmdOk, colorCmdErr, colorOutCurr, colorCmdCurr;
+    QTextCharFormat colorOutDef, colorOutCurr;
     QRegExp allowRegExp;
 
+    /// @todo add "copy selected", save as file
     void onClr();
     void onCopy();
 };
