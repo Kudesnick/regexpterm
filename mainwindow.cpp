@@ -67,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     // User code begin
+    /// @todo добавить возможность выбора имени файла в командной строке при запуске
     sett = new Settings("regexpterm.ini");
 
     QPushButton *corner = new QPushButton("new");
