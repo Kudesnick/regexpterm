@@ -10,17 +10,16 @@ class Console : public QPlainTextEdit
 public:
     explicit Console(QWidget *parent = nullptr, QString pattern = ".*");
     void print(QString);
+    void printEcho(QString);
 
 protected:
     void contextMenuEvent(QContextMenuEvent *);
 
 private:
     QString bufRegExp;
-    QString bufColorPattern;
     QTextCharFormat colorOutDef, colorOutCurr;
     QRegExp allowRegExp;
     void printColorized(QString s);
-    void printRegexp(QString s);
     void scrollDown();
 
     void onCopySelected();
@@ -29,6 +28,9 @@ private:
     void onClrAll();
     void onSaveSelected();
     void onSaveAll();
+
+signals:
+    QString printPreamble(bool echo = false);
 };
 
 #endif // CONSOLE_H

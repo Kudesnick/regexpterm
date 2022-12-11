@@ -102,26 +102,19 @@ void Console::contextMenuEvent(QContextMenuEvent *event)
     contMenu.exec(event->globalPos());
 }
 
+// Сюда должны приходить только полноценные строки с '\n'
 void Console::printColorized(QString s)
 {
-    bufColorPattern += s;
+    const QString decPattern = "\033\[?[0-9]+(;[0-9]+)*m"; /// Паттерн команды декоратора шрифта
 
-    for (int startPos = bufColorPattern.indexOf("\033"); startPos >= 0; startPos = bufColorPattern.indexOf("\033"))
+    for (int startPos = s.indexOf(QRegExp(decPattern)); startPos >= 0; startPos = s.indexOf(QRegExp(decPattern)))
     {
-        textCursor().insertText(bufColorPattern.mid(0, startPos), colorOutCurr);
-        bufColorPattern = bufColorPattern.mid(startPos);
+        textCursor().insertText(s.mid(0, startPos), colorOutCurr);
+        s = s.mid(startPos);
 
-        int mPos = bufColorPattern.indexOf("m");
-        /* Защита от фрагментирования. Если обнаружено начало управляющей последовательности,
-         * но не обнаружено конца - сохраняем фрагмент в буфер и ждем продолжения.*/
-        /// @todo защититься от сломанных последовательностей и зависаний по таймауту (недозагруженных последовательностей)
-        if (bufColorPattern.indexOf("\033[") >= mPos)
-        {
-            // Вероятно, управляющая последовательность еще недозагружена
-            scrollDown();
-            return;
-        }
-        QStringList lst = bufColorPattern.mid(2, mPos - 2).split(QLatin1Char(';'));
+        int mPos = s.indexOf("m");
+
+        QStringList lst = s.mid(2, mPos - 2).split(QLatin1Char(';'));
         for (auto &i : lst)
         {
             bool res = false;
@@ -239,48 +232,40 @@ void Console::printColorized(QString s)
                 break;
 
                 default:
+                    /// @todo логировать непонятные коды декораторов
                     break;
                 }
             }
         }
 
-        bufColorPattern = bufColorPattern.mid(mPos + 1);
+        s = s.mid(mPos + 1);
     }
-    textCursor().insertText(bufColorPattern, colorOutCurr);
-    bufColorPattern.clear();
+    textCursor().insertText(s, colorOutCurr);
 
     scrollDown();
-}
-
-void Console::printRegexp(QString s)
-{
-    if (!s.contains(allowRegExp))
-    {
-        return;
-    }
-
-    printColorized(s);
 }
 
 void Console::print(QString s)
 {
     bufRegExp += s;
 
-    if (allowRegExp.pattern().back() == '$')
+    // Накапливаем строку, потому что иначе регулярное выражение теряет смысл
+    for(int pos = bufRegExp.indexOf(QRegExp("(\r|\n)"));
+        pos >= 0;
+        pos = bufRegExp.indexOf(QRegExp("(\r|\n)")))
     {
-        for(int pos = bufRegExp.indexOf(QRegExp("(\r|\n)"));
-            pos >= 0;
-            pos = bufRegExp.indexOf(QRegExp("(\r|\n)")))
+        QString line = bufRegExp.mid(0, pos + 1);
+        if (line.contains(allowRegExp))
         {
-            printRegexp(bufRegExp.mid(0, pos + 1));
-            bufRegExp = bufRegExp.mid(pos + 1);
+            printColorized(emit printPreamble() + line);
         }
+        bufRegExp = bufRegExp.mid(pos + 1);
     }
-    else
-    {
-        printRegexp(bufRegExp);
-        bufRegExp.clear();
-    }
+}
+
+void Console::printEcho(QString s)
+{
+    printColorized("\033[32m" + emit printPreamble(true) + s + "\033[0m");
 }
 
 void Console::scrollDown()

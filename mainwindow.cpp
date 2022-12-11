@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QPushButton>
+#include <QTime>
 
 void MainWindow::state(QString msg)
 {
@@ -26,9 +27,10 @@ void MainWindow::tabCreate(QString regExpPattern, QString name)
     Console *con = new Console(nullptr, regExpPattern);
     ui->tabWidget->addTab(con, name);
 
-    connect(rtt_telnet, &Socket::receive , con, &Console::print          );
+    connect(rtt_telnet, &Socket::receive       , con , &Console::print);
     /// @todo create  setting echo on/off
-    connect(rtt_telnet, &Socket::transmit, con, &Console::print          );
+    connect(rtt_telnet, &Socket::transmit      , con , &Console::printEcho);
+    connect(con       , &Console::printPreamble, this, &MainWindow::printPreamble);
 }
 
 void MainWindow::newTab(bool check)
@@ -50,6 +52,12 @@ void MainWindow::newTab(bool check)
     }
 
     delete dlg;
+}
+
+QString MainWindow::printPreamble(bool echo)
+{
+    QString result = QTime::currentTime().toString("hh:mm:ss.zzz");
+    return result + (echo ? "< " : "> ");
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -74,7 +82,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     QStringList tabsList;
     if (!sett->tabs.read(tabsList))
-        tabsList.append(".*$");
+        tabsList.append(".*");
     for(auto &i : tabsList) tabCreate(i, i);
 
     QStringList commandList;
@@ -86,6 +94,13 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    delete ui;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    (void)event;
+
     QStringList tabsList;
     for (auto i = 0; i < ui->tabWidget->count(); i++)
         tabsList.append(ui->tabWidget->tabText(i));
@@ -95,8 +110,6 @@ MainWindow::~MainWindow()
     for (auto i = 0; i < ui->cbCmdline->count(); i++)
         commandList.append(ui->cbCmdline->itemText(i));
     sett->cmds.write(commandList);
-
-    delete ui;
 }
 
 void MainWindow::on_btSend_clicked()

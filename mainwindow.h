@@ -16,11 +16,13 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void closeEvent(QCloseEvent *event);
 
     void state(QString);
     void slotTabCloseRequested(int index);
     void tabCreate(QString regExpPattern, QString name);
     void newTab(bool check);
+    QString printPreamble(bool echo = false);
 
 private slots:
     void on_btSend_clicked();
