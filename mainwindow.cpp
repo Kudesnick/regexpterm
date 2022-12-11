@@ -37,7 +37,7 @@ void MainWindow::newTab(bool check)
     (void)check;
 
     QStringList patternsList;
-    Patterns.read(patternsList);
+    sett->patterns.read(patternsList);
     newTabDialog *dlg = new newTabDialog(nullptr, &patternsList);
 
     if (dlg->exec() == QDialog::Accepted)
@@ -47,7 +47,7 @@ void MainWindow::newTab(bool check)
         patternsList.removeAll(dlg->regEx());
         patternsList.append(dlg->regEx());
 
-        Patterns.write(patternsList);
+        sett->patterns.write(patternsList);
     }
 
     delete dlg;
@@ -60,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     // User code begin
+    sett = new Settings("regexpterm.ini");
 
     QPushButton *corner = new QPushButton("new");
     ui->tabWidget->setCornerWidget(corner, Qt::TopRightCorner);
@@ -67,18 +68,19 @@ MainWindow::MainWindow(QWidget *parent)
     connect(corner, &QPushButton::clicked, this, &MainWindow::newTab);
     connect(ui->tabWidget, &QTabWidget::tabCloseRequested, this, &MainWindow::slotTabCloseRequested);
 
+    /// @todo add to setting
     rtt_telnet = new Socket("localhost", 19021);
     connect(rtt_telnet, &Socket::stateMsg     , this      , &MainWindow::state);
     connect(this      , &MainWindow::onCommand, rtt_telnet, &Socket::send     );
 
     QStringList tabsList;
-    if (!Tabs.read(tabsList))
+    if (!sett->tabs.read(tabsList))
         tabsList.append(".*");
     for(auto &i : tabsList) tabCreate(i, i);
 
 
     QStringList commandList;
-    Commands.read(commandList);
+    sett->cmds.read(commandList);
     ui->cbCmdline->addItems(commandList);
 
     // User code end
@@ -89,12 +91,12 @@ MainWindow::~MainWindow()
     QStringList tabsList;
     for (auto i = 0; i < ui->tabWidget->count(); i++)
         tabsList.append(ui->tabWidget->tabText(i));
-    Tabs.write(tabsList);
+    sett->tabs.write(tabsList);
 
     QStringList commandList;
     for (auto i = 0; i < ui->cbCmdline->count(); i++)
         commandList.append(ui->cbCmdline->itemText(i));
-    Commands.write(commandList);
+    sett->cmds.write(commandList);
 
     delete ui;
 }

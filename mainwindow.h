@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "socket.h"
-#include "fileofstringlist.h"
+#include "settings.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -28,10 +28,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Socket *rtt_telnet;
-
-    FileOfStringList Tabs = {"tabs.txt"};
-    FileOfStringList Patterns = {"patterns.txt"};
-    FileOfStringList Commands = {"commands.txt"};
+    Settings *sett;
 signals:
     void onCommand(QString);
 };
