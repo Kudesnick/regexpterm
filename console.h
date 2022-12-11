@@ -10,21 +10,25 @@ class Console : public QPlainTextEdit
 public:
     explicit Console(QWidget *parent = nullptr, QString pattern = ".*");
     void print(QString);
-    void scrollDown();
-    void setConnectState(bool isOk);
-    static QStringList history;
+
 protected:
     void contextMenuEvent(QContextMenuEvent *);
-private:
-    const int historyMax = 10;
-    static bool connectIsOk;
 
+private:
+    QString bufRegExp;
+    QString bufColorPattern;
     QTextCharFormat colorOutDef, colorOutCurr;
     QRegExp allowRegExp;
+    void printColorized(QString s);
+    void printRegexp(QString s);
+    void scrollDown();
 
-    /// @todo add "copy selected", save as file
-    void onClr();
-    void onCopy();
+    void onCopySelected();
+    void onCopyAll();
+    void onSelectAll();
+    void onClrAll();
+    void onSaveSelected();
+    void onSaveAll();
 };
 
 #endif // CONSOLE_H

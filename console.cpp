@@ -2,9 +2,7 @@
 #include <QtWidgets/QScrollBar>
 #include <QMenu>
 #include <QClipboard>
-
-QStringList Console::history;
-bool Console::connectIsOk = false;
+#include <QFileDialog>
 
 Console::Console(QWidget *parent, QString pattern)
     : QPlainTextEdit(parent)
@@ -21,77 +19,109 @@ Console::Console(QWidget *parent, QString pattern)
     colorOutDef.setForeground(Qt::white);
     colorOutDef.setBackground(Qt::black);
     colorOutCurr = colorOutDef;
-
-    setConnectState(connectIsOk);
 }
 
-void Console::setConnectState(bool isOk)
+void Console::onCopySelected()
 {
-    connectIsOk = isOk;
+    copy();
 }
 
-void Console::onClr()
-{
-    clear();
-}
-
-void Console::onCopy()
+void Console::onCopyAll()
 {
     QGuiApplication::clipboard()->setText(toPlainText());
 }
 
-void Console::contextMenuEvent(QContextMenuEvent *event)
+void Console::onSelectAll()
 {
-    QMenu *contMenu = new QMenu(this);
-
-    QAction *A  = new QAction(contMenu);
-    A->setText(tr("Clear"));
-    contMenu->addAction(A);
-    connect(A, &QAction::triggered, this, &Console::onClr);
-
-    QAction *B  = new QAction(contMenu);
-    B->setText(tr("Copy"));
-    contMenu->addAction(B);
-    connect(B, &QAction::triggered, this, &Console::onCopy);
-
-    contMenu->exec(event->globalPos());
-
-    delete A;
-    delete B;
-    delete contMenu;
+    this->selectAll();
 }
 
-void Console::print(QString s)
+void Console::onClrAll()
 {
-    // RegExp match
-    if (!s.contains(allowRegExp))
+    clear();
+}
+
+void Console::onSaveSelected()
+{
+    QString fname = QFileDialog::getSaveFileName(nullptr, "Save selected text", ".", "Log files (*.log);;Any files (*)" );
+    if (fname.length())
     {
-        return;
+        QFile file(fname);
+
+        if (file.open(QIODevice::WriteOnly | QFile::Text))
+        {
+            file.write(textCursor().selectedText().toUtf8());
+            file.close();
+        }
     }
+}
 
-    static QString buf;
-    s = buf + s;
-    buf.clear();
-
-    // Colorized console
-    /// @todo при асинхронной вычитке ломаются последовательности. Реализовать в виде конечного автомата!
-    for (int startPos = s.indexOf("\033"); startPos >= 0; startPos = s.indexOf("\033"))
+void Console::onSaveAll()
+{
+    QString fname = QFileDialog::getSaveFileName(nullptr, "Save full log", ".", "Log files (*.log);;Any files (*)" );
+    if (fname.length())
     {
-        textCursor().insertText(s.mid(0, startPos), colorOutCurr);
-        s = s.mid(startPos);
+        QFile file(fname);
 
-        int mPos = s.indexOf("m");
+        if (file.open(QIODevice::WriteOnly | QFile::Text))
+        {
+            file.write(toPlainText().toUtf8());
+            file.close();
+        }
+    }
+}
+
+void Console::contextMenuEvent(QContextMenuEvent *event)
+{
+    QMenu contMenu(this);
+
+    QAction A("Copy selected (Ctl + C)", &contMenu);
+    contMenu.addAction(&A);
+    connect(&A, &QAction::triggered, this, &Console::onCopySelected);
+
+    QAction B("Copy all", &contMenu);
+    contMenu.addAction(&B);
+    connect(&B, &QAction::triggered, this, &Console::onCopyAll);
+
+    QAction C("Select all (Ctl + A)",&contMenu);
+    contMenu.addAction(&C);
+    connect(&C, &QAction::triggered, this, &Console::onSelectAll);
+
+    QAction D("Clear all", &contMenu);
+    contMenu.addAction(&D);
+    connect(&D, &QAction::triggered, this, &Console::onClrAll);
+
+    QAction E("Save selected as..", &contMenu);
+    contMenu.addAction(&E);
+    connect(&E, &QAction::triggered, this, &Console::onSaveSelected);
+
+    QAction F("Save full log..", &contMenu);
+    contMenu.addAction(&F);
+    connect(&F, &QAction::triggered, this, &Console::onSaveAll);
+
+    contMenu.exec(event->globalPos());
+}
+
+void Console::printColorized(QString s)
+{
+    bufColorPattern += s;
+
+    for (int startPos = bufColorPattern.indexOf("\033"); startPos >= 0; startPos = bufColorPattern.indexOf("\033"))
+    {
+        textCursor().insertText(bufColorPattern.mid(0, startPos), colorOutCurr);
+        bufColorPattern = bufColorPattern.mid(startPos);
+
+        int mPos = bufColorPattern.indexOf("m");
         /* Защита от фрагментирования. Если обнаружено начало управляющей последовательности,
          * но не обнаружено конца - сохраняем фрагмент в буфер и ждем продолжения.*/
         /// @todo защититься от сломанных последовательностей и зависаний по таймауту (недозагруженных последовательностей)
-        if (s.indexOf("\033[") >= mPos)
+        if (bufColorPattern.indexOf("\033[") >= mPos)
         {
             // Вероятно, управляющая последовательность еще недозагружена
-            buf = s;
             scrollDown();
             return;
         }
-        QStringList lst = s.mid(2, mPos - 2).split(QLatin1Char(';'));
+        QStringList lst = bufColorPattern.mid(2, mPos - 2).split(QLatin1Char(';'));
         for (auto &i : lst)
         {
             bool res = false;
@@ -214,11 +244,43 @@ void Console::print(QString s)
             }
         }
 
-        s = s.mid(mPos + 1);
+        bufColorPattern = bufColorPattern.mid(mPos + 1);
     }
-    textCursor().insertText(s, colorOutCurr);
+    textCursor().insertText(bufColorPattern, colorOutCurr);
+    bufColorPattern.clear();
 
     scrollDown();
+}
+
+void Console::printRegexp(QString s)
+{
+    if (!s.contains(allowRegExp))
+    {
+        return;
+    }
+
+    printColorized(s);
+}
+
+void Console::print(QString s)
+{
+    bufRegExp += s;
+
+    if (allowRegExp.pattern().back() == '$')
+    {
+        for(int pos = bufRegExp.indexOf(QRegExp("(\r|\n)"));
+            pos >= 0;
+            pos = bufRegExp.indexOf(QRegExp("(\r|\n)")))
+        {
+            printRegexp(bufRegExp.mid(0, pos + 1));
+            bufRegExp = bufRegExp.mid(pos + 1);
+        }
+    }
+    else
+    {
+        printRegexp(bufRegExp);
+        bufRegExp.clear();
+    }
 }
 
 void Console::scrollDown()

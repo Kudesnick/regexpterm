@@ -29,7 +29,6 @@ void MainWindow::tabCreate(QString regExpPattern, QString name)
     connect(rtt_telnet, &Socket::receive , con, &Console::print          );
     /// @todo create  setting echo on/off
     connect(rtt_telnet, &Socket::transmit, con, &Console::print          );
-    connect(rtt_telnet, &Socket::state   , con, &Console::setConnectState);
 }
 
 void MainWindow::newTab(bool check)
@@ -75,9 +74,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     QStringList tabsList;
     if (!sett->tabs.read(tabsList))
-        tabsList.append(".*");
+        tabsList.append(".*$");
     for(auto &i : tabsList) tabCreate(i, i);
-
 
     QStringList commandList;
     sett->cmds.read(commandList);
