@@ -66,6 +66,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    ui->cbCmdLine->installEventFilter(this);
+
     // User code begin
     /// @todo добавить возможность выбора имени файла в командной строке при запуске
     sett = new Settings("regexpterm.ini");
@@ -88,7 +90,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     QStringList commandList;
     sett->cmds.read(commandList);
-    ui->cbCmdline->addItems(commandList);
+    ui->cbCmdLine->addItems(commandList);
 
     // User code end
 }
@@ -108,8 +110,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
     sett->tabs.write(tabsList);
 
     QStringList commandList;
-    for (auto i = 0; i < ui->cbCmdline->count(); i++)
-        commandList.append(ui->cbCmdline->itemText(i));
+    for (auto i = 0; i < ui->cbCmdLine->count(); i++)
+        commandList.append(ui->cbCmdLine->itemText(i));
     sett->cmds.write(commandList);
 }
 
@@ -117,5 +119,22 @@ void MainWindow::on_btSend_clicked()
 {
     QString eol = "\r"; /// @todo create setting '\r', '\n', '\r\n' or nothing
 
-    emit onCommand(ui->cbCmdline->currentText() + eol);
+    emit onCommand(ui->cbCmdLine->currentText() + eol);
+}
+
+bool MainWindow::eventFilter(QObject *target, QEvent *event)
+{
+    if (true
+        && target == ui->cbCmdLine
+        && event->type() == QEvent::KeyPress
+        )
+    {
+        int key = static_cast<QKeyEvent *>(event)->key();
+        if (key == Qt::Key_Enter || key == Qt::Key_Return)
+        {
+            on_btSend_clicked();
+            return true;
+        }
+    }
+    return QMainWindow::eventFilter(target, event);
 }

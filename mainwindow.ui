@@ -93,7 +93,7 @@
          <number>2</number>
         </property>
         <item>
-         <widget class="QComboBox" name="cbCmdline">
+         <widget class="QComboBox" name="cbCmdLine">
           <property name="enabled">
            <bool>true</bool>
           </property>

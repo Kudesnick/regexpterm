@@ -31,6 +31,7 @@ private:
     Ui::MainWindow *ui;
     Socket *rtt_telnet;
     Settings *sett;
+    bool eventFilter(QObject *target, QEvent *event);
 signals:
     void onCommand(QString);
 };
