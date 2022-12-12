@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>RegExp Terminal v0.4.1a</string>
+   <string>RegExp Terminal v0.4.1b</string>
   </property>
   <property name="layoutDirection">
    <enum>Qt::LeftToRight</enum>
