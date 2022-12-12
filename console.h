@@ -22,6 +22,7 @@ private:
     void printColorized(QString s);
     void insertTextToEnd(const QString &text, const QTextCharFormat &format);
 
+    void onGotoSelected();
     void onCopySelected();
     void onCopyAll();
     void onSelectAll();

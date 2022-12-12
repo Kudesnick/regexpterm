@@ -8,6 +8,8 @@ Console::Console(QWidget *parent, QString pattern)
     : QPlainTextEdit(parent)
     , allowRegExp(pattern)
 {
+    setReadOnly(true);
+
     QFont f("monospace");
     f.setStyleHint(QFont::Monospace);
     setFont(f);
@@ -19,6 +21,11 @@ Console::Console(QWidget *parent, QString pattern)
     colorOutDef.setForeground(Qt::white);
     colorOutDef.setBackground(Qt::black);
     colorOutCurr = colorOutDef;
+}
+
+void Console::onGotoSelected()
+{
+    setTextCursor(textCursor());
 }
 
 void Console::onCopySelected()
@@ -75,29 +82,38 @@ void Console::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu contMenu(this);
 
-    QAction A("Copy selected (Ctl + C)", &contMenu);
-    contMenu.addAction(&A);
-    connect(&A, &QAction::triggered, this, &Console::onCopySelected);
+    bool selected = textCursor().selectedText().length();
 
-    QAction B("Copy all", &contMenu);
-    contMenu.addAction(&B);
-    connect(&B, &QAction::triggered, this, &Console::onCopyAll);
+    QAction gotoSet("Goto selected", &contMenu);
+    gotoSet.setEnabled(selected);
+    contMenu.addAction(&gotoSet);
+    connect(&gotoSet, &QAction::triggered, this, &Console::onGotoSelected);
 
-    QAction C("Select all (Ctl + A)",&contMenu);
-    contMenu.addAction(&C);
-    connect(&C, &QAction::triggered, this, &Console::onSelectAll);
+    QAction cpySet("Copy selected (Ctl + C)", &contMenu);
+    cpySet.setEnabled(selected);
+    contMenu.addAction(&cpySet);
+    connect(&cpySet, &QAction::triggered, this, &Console::onCopySelected);
 
-    QAction D("Clear all", &contMenu);
-    contMenu.addAction(&D);
-    connect(&D, &QAction::triggered, this, &Console::onClrAll);
+    QAction cpyAll("Copy all", &contMenu);
+    contMenu.addAction(&cpyAll);
+    connect(&cpyAll, &QAction::triggered, this, &Console::onCopyAll);
 
-    QAction E("Save selected as..", &contMenu);
-    contMenu.addAction(&E);
-    connect(&E, &QAction::triggered, this, &Console::onSaveSelected);
+    QAction selAll("Select all (Ctl + A)",&contMenu);
+    contMenu.addAction(&selAll);
+    connect(&selAll, &QAction::triggered, this, &Console::onSelectAll);
 
-    QAction F("Save full log..", &contMenu);
-    contMenu.addAction(&F);
-    connect(&F, &QAction::triggered, this, &Console::onSaveAll);
+    QAction clrAll("Clear all", &contMenu);
+    contMenu.addAction(&clrAll);
+    connect(&clrAll, &QAction::triggered, this, &Console::onClrAll);
+
+    QAction svSet("Save selected as..", &contMenu);
+    contMenu.addAction(&svSet);
+    svSet.setEnabled(selected);
+    connect(&svSet, &QAction::triggered, this, &Console::onSaveSelected);
+
+    QAction svAll("Save full log..", &contMenu);
+    contMenu.addAction(&svAll);
+    connect(&svAll, &QAction::triggered, this, &Console::onSaveAll);
 
     contMenu.exec(event->globalPos());
 }
