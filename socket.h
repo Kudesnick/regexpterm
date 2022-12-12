@@ -13,7 +13,6 @@ public:
 protected:
     QString Host;
     int Port;
-    QTimer *tmr;
 
 private:
     void slotConnected();

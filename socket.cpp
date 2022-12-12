@@ -10,7 +10,6 @@ Socket::Socket(QString _Host, int _Port,  QObject *_prnt)
     connect(this, &QTcpSocket::readyRead, this, &Socket::slotRead);
     connect(this, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error), this, &Socket::slotError);
 
-    tmr = new QTimer();
     QTimer::singleShot(1000, this, &Socket::slotConnect);
 };
 

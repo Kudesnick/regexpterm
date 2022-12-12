@@ -21,6 +21,9 @@ Console::Console(QWidget *parent, QString pattern)
     colorOutDef.setForeground(Qt::white);
     colorOutDef.setBackground(Qt::black);
     colorOutCurr = colorOutDef;
+
+    promptTimer.setSingleShot(true);
+    connect(&promptTimer, &QTimer::timeout, this , &Console::slotPromptTimeout);
 }
 
 void Console::onGotoSelected()
@@ -279,6 +282,8 @@ void Console::printColorized(QString s)
 
 void Console::print(QString s)
 {
+    promptTimer.stop();
+
     bufRegExp += s;
 
     // Накапливаем строку, потому что иначе регулярное выражение теряет смысл
@@ -292,6 +297,21 @@ void Console::print(QString s)
             printColorized(emit printPreamble() + line);
         }
         bufRegExp = bufRegExp.mid(pos + 1);
+    }
+
+    // Взводим таймер на случай, если пришла строка приглашения без перевода строки
+    // детектируем её по таймауту
+    if (bufRegExp.length() > 0)
+    {
+        promptTimer.start(500);
+    }
+}
+
+void Console::slotPromptTimeout()
+{
+    if (bufRegExp.contains(allowRegExp))
+    {
+        print("\n");
     }
 }
 

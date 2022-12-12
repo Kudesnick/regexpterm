@@ -19,6 +19,7 @@ private:
     QString bufRegExp;
     QTextCharFormat colorOutDef, colorOutCurr;
     QRegExp allowRegExp;
+    QTimer promptTimer;
     void printColorized(QString s);
     void insertTextToEnd(const QString &text, const QTextCharFormat &format);
 
@@ -29,6 +30,8 @@ private:
     void onClrAll();
     void onSaveSelected();
     void onSaveAll();
+
+    void slotPromptTimeout();
 
 signals:
     QString printPreamble(bool echo = false);
