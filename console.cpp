@@ -102,6 +102,23 @@ void Console::contextMenuEvent(QContextMenuEvent *event)
     contMenu.exec(event->globalPos());
 }
 
+void Console::insertTextToEnd(const QString &text, const QTextCharFormat &format)
+{
+    QScrollBar *vbar = verticalScrollBar();
+
+    // Do not scrolling if use manual text navigation or have selected fragment
+    const bool mustScroll = vbar->value() == vbar->maximum() && textCursor().selectedText().length() == 0;
+
+    QTextCursor tmpCcursor = QTextCursor(this->document());
+    tmpCcursor.movePosition(QTextCursor::End);
+    tmpCcursor.insertText(text, format);
+
+    if (mustScroll)
+    {
+        vbar->setValue(vbar->maximum());
+    }
+}
+
 // Сюда должны приходить только полноценные строки с '\n'
 void Console::printColorized(QString s)
 {
@@ -109,7 +126,7 @@ void Console::printColorized(QString s)
 
     for (int startPos = s.indexOf(QRegExp(decPattern)); startPos >= 0; startPos = s.indexOf(QRegExp(decPattern)))
     {
-        textCursor().insertText(s.mid(0, startPos), colorOutCurr);
+        insertTextToEnd(s.mid(0, startPos), colorOutCurr);
         s = s.mid(startPos);
 
         int mPos = s.indexOf("m");
@@ -121,6 +138,7 @@ void Console::printColorized(QString s)
             int cmd = i.toInt(&res);
             if (res)
             {
+                /// @todo select light or normal colorized in settings
                 const Qt::GlobalColor colors[] =
                 {
                     Qt::black      ,
@@ -240,9 +258,7 @@ void Console::printColorized(QString s)
 
         s = s.mid(mPos + 1);
     }
-    textCursor().insertText(s, colorOutCurr);
-
-    scrollDown();
+    insertTextToEnd(s, colorOutCurr);
 }
 
 void Console::print(QString s)
@@ -266,10 +282,4 @@ void Console::print(QString s)
 void Console::printEcho(QString s)
 {
     printColorized("\033[32m" + emit printPreamble(true) + s + "\033[0m");
-}
-
-void Console::scrollDown()
-{
-    QScrollBar *vbar = verticalScrollBar();
-    vbar->setValue(vbar->maximum());
 }

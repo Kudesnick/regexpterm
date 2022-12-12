@@ -20,7 +20,7 @@ private:
     QTextCharFormat colorOutDef, colorOutCurr;
     QRegExp allowRegExp;
     void printColorized(QString s);
-    void scrollDown();
+    void insertTextToEnd(const QString &text, const QTextCharFormat &format);
 
     void onCopySelected();
     void onCopyAll();
