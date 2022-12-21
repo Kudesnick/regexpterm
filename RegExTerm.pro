@@ -18,22 +18,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    frame.cpp \
     main.cpp \
-    mainwindow.cpp \
     console.cpp \
     newtabdialog.cpp \
     settings.cpp \
     socket.cpp
 
 HEADERS += \
-    mainwindow.h \
     console.h \
+    frame.h \
     newtabdialog.h \
     settings.h \
     socket.h
 
 FORMS += \
-    mainwindow.ui \
+    framewindow.ui \
     newtabdialog.ui
 
 # Default rules for deployment.

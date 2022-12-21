@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "frame.h"
+#include "ui_framewindow.h"
 #include "console.h"
 #include "newtabdialog.h"
 #include <QMessageBox>
@@ -7,12 +7,12 @@
 #include <QPushButton>
 #include <QTime>
 
-void MainWindow::state(QString msg)
+void Frame::state(QString msg)
 {
     ui->statusBar->showMessage(msg);
 }
 
-void MainWindow::slotTabCloseRequested(int index)
+void Frame::slotTabCloseRequested(int index)
 {
     if (QMessageBox::question(this, "Delete tab",
         "To delete tab \"" + ui->tabWidget->tabText(index) + "\"?",
@@ -22,7 +22,7 @@ void MainWindow::slotTabCloseRequested(int index)
     }
 }
 
-void MainWindow::tabCreate(QString regExpPattern, QString name)
+void Frame::tabCreate(QString regExpPattern, QString name)
 {
     Console *con = new Console(nullptr, regExpPattern);
     ui->tabWidget->addTab(con, name);
@@ -30,10 +30,10 @@ void MainWindow::tabCreate(QString regExpPattern, QString name)
     connect(rtt_telnet, &Socket::receive       , con , &Console::print);
     /// @todo create  setting echo on/off
     connect(rtt_telnet, &Socket::transmit      , con , &Console::printEcho);
-    connect(con       , &Console::printPreamble, this, &MainWindow::printPreamble);
+    connect(con       , &Console::printPreamble, this, &Frame::printPreamble);
 }
 
-void MainWindow::newTab(bool check)
+void Frame::newTab(bool check)
 {
     (void)check;
 
@@ -54,15 +54,15 @@ void MainWindow::newTab(bool check)
     delete dlg;
 }
 
-QString MainWindow::printPreamble(bool echo)
+QString Frame::printPreamble(bool echo)
 {
     QString result = QTime::currentTime().toString("hh:mm:ss.zzz");
     return result + (echo ? "< " : "> ");
 }
 
-MainWindow::MainWindow(QWidget *parent)
+Frame::Frame(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::FrameWindow)
 {
     ui->setupUi(this);
 
@@ -75,13 +75,13 @@ MainWindow::MainWindow(QWidget *parent)
     QPushButton *corner = new QPushButton("new");
     ui->tabWidget->setCornerWidget(corner, Qt::TopRightCorner);
 
-    connect(corner, &QPushButton::clicked, this, &MainWindow::newTab);
-    connect(ui->tabWidget, &QTabWidget::tabCloseRequested, this, &MainWindow::slotTabCloseRequested);
+    connect(corner, &QPushButton::clicked, this, &Frame::newTab);
+    connect(ui->tabWidget, &QTabWidget::tabCloseRequested, this, &Frame::slotTabCloseRequested);
 
     /// @todo add to setting
     rtt_telnet = new Socket("localhost", 19021);
-    connect(rtt_telnet, &Socket::stateMsg     , this      , &MainWindow::state);
-    connect(this      , &MainWindow::onCommand, rtt_telnet, &Socket::send     );
+    connect(rtt_telnet, &Socket::stateMsg     , this      , &Frame::state);
+    connect(this      , &Frame::onCommand, rtt_telnet, &Socket::send     );
 
     QStringList tabsList;
     if (!sett->tabs.read(tabsList))
@@ -95,12 +95,12 @@ MainWindow::MainWindow(QWidget *parent)
     // User code end
 }
 
-MainWindow::~MainWindow()
+Frame::~Frame()
 {
     delete ui;
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
+void Frame::closeEvent(QCloseEvent *event)
 {
     (void)event;
 
@@ -115,14 +115,14 @@ void MainWindow::closeEvent(QCloseEvent *event)
     sett->cmds.write(commandList);
 }
 
-void MainWindow::on_btSend_clicked()
+void Frame::on_btSend_clicked()
 {
     QString eol = "\r"; /// @todo create setting '\r', '\n', '\r\n' or nothing
 
     emit onCommand(ui->cbCmdLine->currentText() + eol);
 }
 
-bool MainWindow::eventFilter(QObject *target, QEvent *event)
+bool Frame::eventFilter(QObject *target, QEvent *event)
 {
     if (true
         && target == ui->cbCmdLine
