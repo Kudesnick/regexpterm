@@ -9,7 +9,7 @@
 
 void Frame::state(QString msg)
 {
-    ui->statusBar->showMessage(msg);
+    ui->statusBar->setText(msg);
 }
 
 void Frame::slotTabCloseRequested(int index)
@@ -61,8 +61,8 @@ QString Frame::printPreamble(bool echo)
 }
 
 Frame::Frame(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::FrameWindow)
+    : QWidget(parent)
+    , ui(new Ui::FrameWindow())
 {
     ui->setupUi(this);
 
@@ -136,5 +136,5 @@ bool Frame::eventFilter(QObject *target, QEvent *event)
             return true;
         }
     }
-    return QMainWindow::eventFilter(target, event);
+    return QWidget::eventFilter(target, event);
 }

@@ -21,6 +21,7 @@ SOURCES += \
     frame.cpp \
     main.cpp \
     console.cpp \
+    mainwindow.cpp \
     newtabdialog.cpp \
     settings.cpp \
     socket.cpp
@@ -28,12 +29,14 @@ SOURCES += \
 HEADERS += \
     console.h \
     frame.h \
+    mainwindow.h \
     newtabdialog.h \
     settings.h \
     socket.h
 
 FORMS += \
     framewindow.ui \
+    mainwindow.ui \
     newtabdialog.ui
 
 # Default rules for deployment.

@@ -1,15 +1,13 @@
 #ifndef FRAME_H
 #define FRAME_H
 
-#include <QMainWindow>
+#include <QWidget>
 #include "socket.h"
 #include "settings.h"
 
-QT_BEGIN_NAMESPACE
 namespace Ui { class FrameWindow; }
-QT_END_NAMESPACE
 
-class Frame : public QMainWindow
+class Frame : public QWidget
 {
     Q_OBJECT
 
