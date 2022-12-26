@@ -1,4 +1,4 @@
-QT       += core gui network
+QT       += core gui network serialport
 
 win32:RC_ICONS += RegExTerm.ico
 
@@ -18,20 +18,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    comport.cpp \
     frame.cpp \
     main.cpp \
     console.cpp \
     mainwindow.cpp \
     newtabdialog.cpp \
     settings.cpp \
+    slot.cpp \
     socket.cpp
 
 HEADERS += \
+    comport.h \
     console.h \
     frame.h \
     mainwindow.h \
     newtabdialog.h \
     settings.h \
+    slot.h \
     socket.h
 
 FORMS += \

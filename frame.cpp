@@ -27,10 +27,10 @@ void Frame::tabCreate(QString regExpPattern, QString name)
     Console *con = new Console(nullptr, regExpPattern);
     ui->tabWidget->addTab(con, name);
 
-    connect(rtt_telnet, &Socket::receive       , con , &Console::print);
+    connect(slot, &Slot::receive         , con , &Console::print);
     /// @todo create  setting echo on/off
-    connect(rtt_telnet, &Socket::transmit      , con , &Console::printEcho);
-    connect(con       , &Console::printPreamble, this, &Frame::printPreamble);
+    connect(slot, &Slot::transmit        , con , &Console::printEcho);
+    connect(con , &Console::printPreamble, this, &Frame::printPreamble);
 }
 
 void Frame::newTab(bool check)
@@ -60,9 +60,10 @@ QString Frame::printPreamble(bool echo)
     return result + (echo ? "< " : "> ");
 }
 
-Frame::Frame(QWidget *parent)
-    : QWidget(parent)
+Frame::Frame(Slot *_slot, QWidget *_parent)
+    : QWidget(_parent)
     , ui(new Ui::FrameWindow())
+    , slot(_slot)
 {
     ui->setupUi(this);
 
@@ -79,9 +80,8 @@ Frame::Frame(QWidget *parent)
     connect(ui->tabWidget, &QTabWidget::tabCloseRequested, this, &Frame::slotTabCloseRequested);
 
     /// @todo add to setting
-    rtt_telnet = new Socket("localhost", 19021);
-    connect(rtt_telnet, &Socket::stateMsg     , this      , &Frame::state);
-    connect(this      , &Frame::onCommand, rtt_telnet, &Socket::send     );
+    connect(slot, &Slot::stateMsg  , this, &Frame::state);
+    connect(this, &Frame::onCommand, slot, &Slot::send);
 
     QStringList tabsList;
     if (!sett->tabs.read(tabsList))

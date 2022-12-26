@@ -16,19 +16,19 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <property name="leftMargin">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="topMargin">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="rightMargin">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="bottomMargin">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="spacing">
-     <number>2</number>
+     <number>0</number>
     </property>
    </layout>
   </widget>
@@ -38,7 +38,7 @@
      <x>0</x>
      <y>0</y>
      <width>627</width>
-     <height>20</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

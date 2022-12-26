@@ -10,9 +10,12 @@ class Socket : public QTcpSocket
 public:
     explicit Socket(QString _Host, int _Port,  QObject *_prnt = nullptr);
     void send(QString _Str);
+
+    const QString &Host = Host_;
+    const int &Port = Port_;
 protected:
-    QString Host;
-    int Port;
+    QString Host_;
+    int Port_;
 
 private:
     void slotConnected();

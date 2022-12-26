@@ -77,32 +77,6 @@
     </layout>
    </item>
    <item row="1" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <property name="spacing">
-      <number>2</number>
-     </property>
-     <property name="leftMargin">
-      <number>2</number>
-     </property>
-     <property name="rightMargin">
-      <number>2</number>
-     </property>
-     <item>
-      <widget class="QCheckBox" name="checkBox">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>CheckBox</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="2" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="spacing">
       <number>2</number>
@@ -127,8 +101,14 @@
        <property name="autoFillBackground">
         <bool>false</bool>
        </property>
+       <property name="styleSheet">
+        <string notr="true">QComboBox { background-color: black ; color: green}</string>
+       </property>
        <property name="editable">
         <bool>true</bool>
+       </property>
+       <property name="currentText">
+        <string>test</string>
        </property>
        <property name="duplicatesEnabled">
         <bool>false</bool>
@@ -146,17 +126,32 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="text">
-        <string>Send</string>
+        <string>⏎</string>
        </property>
       </widget>
      </item>
     </layout>
    </item>
-   <item row="3" column="0">
+   <item row="2" column="0">
     <widget class="QLabel" name="statusBar">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
      <property name="text">
       <string>TextLabel</string>
+     </property>
+     <property name="margin">
+      <number>4</number>
      </property>
     </widget>
    </item>

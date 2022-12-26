@@ -311,11 +311,11 @@ void Console::slotPromptTimeout()
 {
     if (bufRegExp.contains(allowRegExp))
     {
-        print("\n");
+        print("\e[0m\n");
     }
 }
 
 void Console::printEcho(QString s)
 {
-    printColorized("\033[32m" + emit printPreamble(true) + s + "\033[0m");
+    printColorized("\e[32m" + emit printPreamble(true) + s + "\e[0m");
 }

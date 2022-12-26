@@ -1,11 +1,10 @@
 #include "socket.h"
-#include <QTextStream>
 
 Socket::Socket(QString _Host, int _Port,  QObject *_prnt)
     : QTcpSocket(_prnt)
-    , Host(_Host)
-    , Port(_Port)
-{
+    , Host_(_Host)
+    , Port_(_Port)
+{   
     connect(this, &QTcpSocket::connected, this, &Socket::slotConnected);
     connect(this, &QTcpSocket::readyRead, this, &Socket::slotRead);
     connect(this, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error), this, &Socket::slotError);
@@ -13,18 +12,17 @@ Socket::Socket(QString _Host, int _Port,  QObject *_prnt)
     QTimer::singleShot(1000, this, &Socket::slotConnect);
 };
 
+void Socket::send(QString _Str)
+{
+    int len = write(_Str.toUtf8());
+    emit transmit(_Str.left(len));
+}
+
 void Socket::slotConnect()
 {
     emit state(false);
     emit stateMsg("Connecting..");
     QTcpSocket::connectToHost(Host, Port);
-}
-
-void Socket::send(QString _Str)
-{
-    QTextStream os(this);
-    os << _Str;
-    emit transmit(_Str);
 }
 
 void Socket::slotConnected()
@@ -43,20 +41,11 @@ void Socket::slotDisconnected()
 
 void Socket::slotRead()
 {
-#if (1)
-    //Данный режим обеспечивает полноценое эхо и диалоги, но затрудняет работу с регулярными выражениями
     QString str = readAll();
     if (str.length())
     {
         emit receive(str);
     }
-#else
-    while (canReadLine())
-    {
-        QString str = readLine();
-        emit receive(str);
-    }
-#endif
 }
 
 void Socket::slotError(QAbstractSocket::SocketError _Error)
