@@ -3,7 +3,7 @@
 #include "frame.h"
 #include "socket.h"
 #include "comport.h"
-#include <QSplitter>
+#include "splitter.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     Slot *rtt_telnet = new Slot(new Socket("localhost", 19021), nullptr);
     Slot *serial_port = new Slot(new Comport("COM1", QSerialPort::Baud115200, QSerialPort::Data8, QSerialPort::NoParity, QSerialPort::OneStop), nullptr);
 
-    QSplitter *split = new QSplitter(Qt::Horizontal, this);
+    Splitter *split = new Splitter(Qt::Horizontal, this);
     ui->gridLayout->addWidget(split);
     split->addWidget(new Frame(rtt_telnet, split));
     split->addWidget(new Frame(serial_port, split));

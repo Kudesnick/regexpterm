@@ -26,7 +26,9 @@ SOURCES += \
     newtabdialog.cpp \
     settings.cpp \
     slot.cpp \
-    socket.cpp
+    socket.cpp \
+    splitter.cpp \
+    tabcorner.cpp
 
 HEADERS += \
     comport.h \
@@ -36,12 +38,15 @@ HEADERS += \
     newtabdialog.h \
     settings.h \
     slot.h \
-    socket.h
+    socket.h \
+    splitter.h \
+    tabcorner.h
 
 FORMS += \
     framewindow.ui \
     mainwindow.ui \
-    newtabdialog.ui
+    newtabdialog.ui \
+    tabcorner.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

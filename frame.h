@@ -19,7 +19,7 @@ public:
     void state(QString);
     void slotTabCloseRequested(int index);
     void tabCreate(QString regExpPattern, QString name);
-    void newTab(bool check);
+    void newTab();
     QString printPreamble(bool echo = false);
 
 private slots:

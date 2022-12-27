@@ -2,6 +2,7 @@
 #include "ui_framewindow.h"
 #include "console.h"
 #include "newtabdialog.h"
+#include "tabcorner.h"
 #include <QMessageBox>
 #include <QLabel>
 #include <QPushButton>
@@ -33,10 +34,8 @@ void Frame::tabCreate(QString regExpPattern, QString name)
     connect(con , &Console::printPreamble, this, &Frame::printPreamble);
 }
 
-void Frame::newTab(bool check)
+void Frame::newTab()
 {
-    (void)check;
-
     QStringList patternsList;
     sett->patterns.read(patternsList);
     newTabDialog *dlg = new newTabDialog(nullptr, &patternsList);
@@ -73,10 +72,10 @@ Frame::Frame(Slot *_slot, QWidget *_parent)
     /// @todo добавить возможность выбора имени файла в командной строке при запуске
     sett = new Settings("regexpterm.ini");
 
-    QPushButton *corner = new QPushButton("new");
+    TabCorner *corner = new TabCorner();
     ui->tabWidget->setCornerWidget(corner, Qt::TopRightCorner);
+    connect(corner, &TabCorner::pressNew, this, &Frame::newTab);
 
-    connect(corner, &QPushButton::clicked, this, &Frame::newTab);
     connect(ui->tabWidget, &QTabWidget::tabCloseRequested, this, &Frame::slotTabCloseRequested);
 
     /// @todo add to setting
