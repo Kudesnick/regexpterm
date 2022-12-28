@@ -18,6 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    addslotdialog.cpp \
     comport.cpp \
     frame.cpp \
     main.cpp \
@@ -31,6 +32,7 @@ SOURCES += \
     tabcorner.cpp
 
 HEADERS += \
+    addslotdialog.h \
     comport.h \
     console.h \
     frame.h \
@@ -43,6 +45,7 @@ HEADERS += \
     tabcorner.h
 
 FORMS += \
+    addslotdialog.ui \
     framewindow.ui \
     mainwindow.ui \
     newtabdialog.ui \
